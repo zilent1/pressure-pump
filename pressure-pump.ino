@@ -64,17 +64,14 @@ void setup() {
       bufferName[l] = 0;
       if (l == 0)
         break;
-      Serial.println(String(l));
       l = file.readBytesUntil('\n', bufferPass, sizeof(bufferPass));
       if (l == 0)
         break;
       bufferPass[l-1] = 0;
-      Serial.println("[" + String(bufferName) + "]");
-      Serial.println("[" + String(bufferPass) + "]");
       if (wifiMulti.addAP(bufferName, bufferPass)) {
-        Serial.println("AddAP returned true.");
+        Serial.println("Added AP: [" + String(bufferName) + "]");
       } else {
-        Serial.println("AddAP returned FALSE.");
+        Serial.println("AddAP error for: [ "+ String(bufferName) + "]");
       }
     }
     file.close();
@@ -82,11 +79,9 @@ void setup() {
     Serial.println("AP list not found.");
   }
   Serial.println("Conecting to wifi...");
-  int wS = wifiMulti.run();
-  while (wS != WL_CONNECTED) { // Wait for the Wi-Fi to connect
+  while (wifiMulti.run() != WL_CONNECTED) { // Wait for the Wi-Fi to connect
     delay(250);
-    Serial.println("wS: " + String(wS));
-    wS = wifiMulti.run();
+    Serial.print('.');
   }
   Serial.println('\n');
   Serial.print("Connected to ");
